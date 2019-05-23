@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.0",
+    "express-session": "^1.16.1",
+    "mongoose": "^5.5.9",
+    "mongoose-findorcreate": "^3.0.0",
+    "passport": "^0.4.0",
+    "passport-github": "^1.1.0",
+    "passport-local-mongoose": "^5.0.1",
+    "socket.io": "^2.2.0"
+  }
+}

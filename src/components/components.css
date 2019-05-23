@@ -1,0 +1,170 @@
+.login-container {
+  text-align: left;
+  margin-top: 0px;
+  padding-top: 0px;
+}
+
+.sign-in-col {
+  text-align: center;
+  padding: 30px;
+}
+
+.position-btn {
+  margin-top: 3px;
+}
+
+.fab {
+  margin: 0 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.margin {
+  margin: 100px 50px;
+}
+
+.distance {
+  margin-left: 350px;
+}
+
+.jumbo-margin {
+  margin: 0;
+}
+
+.jumbo-margin-chat {
+  margin: 0;
+  padding: 0px;
+  text-align: left;
+  display: flex;
+  width: 100%;
+}
+
+.chat-heading {
+  margin-left: 15%;
+  margin-right: 65%;
+  width: 200px;
+  margin-top: 20px;
+}
+
+.profileImg {
+  height: 70px;
+  width: 70px;
+  margin-top: 5px;
+}
+
+.left-side-div {
+  width: 300px;
+}
+
+.right-side-div {
+  margin-left: 750px;
+}
+
+.profile-name {
+  margin-left: 10px;
+  margin-left: 5px;
+}
+
+.div-color {
+  background-color: #e9ecef;
+  padding: 20px;
+}
+
+.color-bg {
+  background-color: #373a6d;
+}
+
+.color-btn {
+  background-color: #e9ecef;
+  color: black;
+  margin-right: 0;
+  border-color: #e9ecef;
+}
+
+.btn-size {
+  height: 90px;
+}
+
+.repo-parent-flex {
+  display: flex;
+  width: 100%;
+  margin-left: 20px;
+}
+
+.repo-left-div {
+  width: 27%;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.repo-right-div {
+  width: 65%;
+  margin-left: 15px;
+  margin-top: 20px;
+  height: 640px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 8px;
+}
+
+.repo-padding {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.repo-heading {
+  margin-bottom: 30px;
+}
+
+.repo-name {
+  font-weight: 400;
+}
+
+.repo-description {
+  font-weight: 200;
+  font-style: italic;
+}
+
+.repo-unit {
+  border: 1px solid #212529;
+  border-radius: 3%;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.repo-chat-div {
+  height: 100%;
+}
+
+.padding-chat {
+  padding-top: 20px;
+}
+
+.repo-child-parent {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+}
+
+.child-right-div {
+  margin-left: 30px;
+  margin-top: 8px;
+  overflow: hidden;
+  height: 50px;
+}
+
+.contributor-head {
+  margin-bottom: 0;
+}
+
+.child-design {
+  max-width: 770px !important;
+}
+
+.style {
+  background-color: #373a6d;
+  color: white;
+}
