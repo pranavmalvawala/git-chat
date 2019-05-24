@@ -2,10 +2,10 @@ import React from 'react';
 import './App.css';
 import './components/components.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import SignUp from './components/SignUp';
-import ChatPage from './components/ChatPage';
-import SignIn from './components/SignIn';
-import Home from './components/Home';
+import SignUp from './components/SignUp/index';
+import ChatPage from './components/ChatPage/index';
+import SignIn from './components/SignIn/index';
+import Home from './components/Home/index';
 
 function App() {
   return (

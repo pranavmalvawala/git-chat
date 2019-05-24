@@ -7,8 +7,10 @@ function Repositories(props) {
   const [repoData, setRepoData] = useState([]);
   const [highLightItem, setHighlightItem] = useState({});
 
+  // called only once after return (as a componentDidMount)
   useEffect(() => {
     if (repoData.length <= 0) {
+      // gets all the data of ones repositories
       axios
         .get(props.userRepoData)
         .then(res => {
@@ -17,12 +19,15 @@ function Repositories(props) {
         .catch(err => console.log(err));
     } else {
     }
-  });
+  }, [props.userRepoData, repoData.length]);
 
+  // sets the clicked item in state which will be highlighted
   function theClickedItem(item) {
     setHighlightItem(item);
   }
 
+  // renders all repositories
+  // better approach appreciated
   return (
     <div>
       <Jumbotron className="repo-padding">
@@ -30,6 +35,7 @@ function Repositories(props) {
         <div>
           {repoData ? (
             repoData.map(item =>
+              // the Highlighted repository will be displayed by this part
               item.id === highLightItem.id ? (
                 <RepoUnit
                   repoData={item}
@@ -41,6 +47,7 @@ function Repositories(props) {
                   itemToBeHighlighted={highLightItem.id}
                 />
               ) : (
+                // Rest of the repositories will be displayed by this
                 <RepoUnit
                   repoData={item}
                   key={item.id}

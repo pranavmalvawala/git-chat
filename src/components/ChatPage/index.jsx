@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Jumbotron,
-  Container,
-  Row,
-  Col,
-  Image,
-  Dropdown
-} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import Repositories from './Repositories';
-import RepoChat from './RepoChat';
+import Repositories from '../Repositories';
+// component which is parent to all the single unit repositories displayed on left
+import ChatContainer from './ChatContainer';
+import NavBar from './NavBar';
+// component on the right which contains chat functionality
+import io from 'socket.io-client';
 
 function ChatPage(props) {
   const [authenticated, setAuthentication] = useState(false);
   const [userData, setUserData] = useState({});
   const [clickedItem, setClickedItem] = useState({});
 
+  // checks user's authentication
   useEffect(() => {
+    //  this part accomplish 2 things
+    // 1 - if the user tries to access the page directly user is redirected to SIGN IN,
+    // 2 - once the user signed in and wants to access page directly he wont have to
+    // sign in until one decides to log out.
     if (authenticated === false) {
       axios
         .get('http://localhost:5000/checkauth')
@@ -31,10 +32,14 @@ function ChatPage(props) {
           props.history.push('/signin');
         });
     }
-  });
+    // this [] at end makes the useEffect to call only if there are changes in
+    // the mentioned item in those array.
+  }, [authenticated, props.history]);
 
+  // redirects to home page after the response of server is OK on SIGN OUT rqst
   async function handleSignOut(e) {
     e.preventDefault();
+    setAuthentication(false);
     await axios.get('http://localhost:5000/logout').then(res => {
       if (res.data.response === 'success') {
         props.history.push('/');
@@ -42,48 +47,17 @@ function ChatPage(props) {
     });
   }
 
+  // saves the clicked item in state which is later passed to RepoChat component
   function passItemToChat(item) {
     setClickedItem(item);
+    // connection is made just once on the clicked repo
+    const socket = io('http://localhost:5000');
   }
 
   return (
     authenticated && (
       <div className="color-bg">
-        <Jumbotron className="center jumbo-margin-chat">
-          <div className="left-side-div">
-            <h1 className="chat-heading">Chat Box</h1>
-          </div>
-          <div className="right-side-div">
-            <Dropdown>
-              <Dropdown.Toggle
-                className="color-btn btn-size"
-                variant="secondary"
-                id="dropdown-basic"
-              >
-                {userData && (
-                  <Container>
-                    <Row>
-                      <Col xs={0.3} md={0.2}>
-                        <Image
-                          src={userData.photos[0].value}
-                          roundedCircle
-                          className="profileImg"
-                        />
-                        <span className="profile-name">
-                          {userData.username}
-                        </span>
-                      </Col>
-                    </Row>
-                  </Container>
-                )}
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-        </Jumbotron>
+        <NavBar userData={userData} handleSignOut={handleSignOut} />
         <div className="repo-parent-flex">
           <div className="repo-left-div">
             {userData && (
@@ -94,7 +68,7 @@ function ChatPage(props) {
             )}
           </div>
           <div className="repo-right-div">
-            {userData && <RepoChat selectedRepo={clickedItem} />}
+            {userData && <ChatContainer selectedRepo={clickedItem} />}
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Button, ButtonToolbar } from 'react-bootstrap';
-import ChatPanel from './ChatPanel';
+import ChatDoneHere from './ChatDoneHere';
 
-function RepoChatChild(props) {
+function SelectedRepo(props) {
   const [show, setShow] = useState(false);
 
   function handleClose() {
@@ -13,18 +13,18 @@ function RepoChatChild(props) {
     setShow(true);
   }
 
-  const { selectedRepo, contributors } = props;
   return (
     <>
       <ButtonToolbar>
-        <Button variant="outline-dark" className="child-design">
+        {/* Header */}
+        <Button variant="outline-dark btn-style" className="child-design">
           <div className="repo-child-parent" onClick={handleShow}>
             <div className="child-left-div">
-              <h3>{selectedRepo.name}</h3>
+              <h3>{props.selectedRepo.name}</h3>
             </div>
             <div className="child-right-div">
               <p className="contributor-head">:Contributors:</p>
-              {contributors.map(item => (
+              {props.contributors.map(item => (
                 <span key={item.id}>{item.login},</span>
               ))}
             </div>
@@ -34,11 +34,11 @@ function RepoChatChild(props) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{selectedRepo.name}</Modal.Title>
+          <Modal.Title>{props.selectedRepo.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h6>:Contributors:</h6>
-          {contributors.map(item => (
+          {props.contributors.map(item => (
             <span key={item.id}>{item.login}, </span>
           ))}
         </Modal.Body>
@@ -48,9 +48,10 @@ function RepoChatChild(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ChatPanel />
+      {/* Main chat component */}
+      <ChatDoneHere />
     </>
   );
 }
 
-export default RepoChatChild;
+export default SelectedRepo;

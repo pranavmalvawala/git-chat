@@ -168,3 +168,7 @@
   background-color: #373a6d;
   color: white;
 }
+
+.btn-style {
+  max-width: 58px;
+}

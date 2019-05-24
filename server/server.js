@@ -32,6 +32,7 @@ mongoose.connect('mongodb://localhost:27017/gitchatDB', {
 });
 mongoose.set('useCreateIndex', true);
 
+// Model schema
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
@@ -41,6 +42,7 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
+// User model based on above schema
 const User = new mongoose.model('User', userSchema);
 
 passport.use(User.createStrategy());
@@ -54,8 +56,10 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// this variable for sending users github data to React end
 var githubPersonData;
 
+// github passport strategy
 passport.use(
   new GitHubStrategy(
     {
@@ -72,9 +76,15 @@ passport.use(
   )
 );
 
+// EVERY COMMUNICATION AND LOGIC BETWEEN REACT AND NODE IS DONE THROUGH
+// RES.SEND HERE AND ACCESSING THAT THROUGH API IN REACT
+// ANY BETTER METHODS APPRECIATED
+
+// variable responsible for redirecting to chat after authenticating a local user
 var authResponse;
 
 app.post('/signup', function(req, res) {
+  // registers and authenticate local users
   User.register({ username: req.body.username }, req.body.password, function(
     err,
     user
@@ -94,6 +104,7 @@ app.post('/signup', function(req, res) {
 
 app.get('/auth/github', passport.authenticate('github'));
 
+// variable responsible for redirecting to chat after authenticating a GITHUB user
 var githubResponse;
 
 app.get(
@@ -101,15 +112,12 @@ app.get(
   passport.authenticate('github', { failureRedirect: '/authenticate' }),
   function(req, res) {
     githubResponse = 'Authenticated';
-    // Successful authentication, redirect home.
+    // Successful authentication, redirect chatpage.
     res.redirect('http://localhost:3000/chatpage');
   }
 );
 
-app.get('/authenticate', async function(req, res) {
-  await res.send({ response: authResponse });
-});
-
+// logout and delete the values of global variables
 app.get('/logout', function(req, res) {
   authResponse = null;
   loginAuthenticate = null;
@@ -119,8 +127,11 @@ app.get('/logout', function(req, res) {
   res.send({ response: 'success' });
 });
 
+// variable responsible for redirecting to chat after
+// authenticating a local user through sign in
 var loginAuthenticate;
 
+// signing in a local user
 app.post('/login', function(req, res) {
   const user = new User({
     username: req.body.username,
@@ -140,6 +151,7 @@ app.post('/login', function(req, res) {
   });
 });
 
+// data on this api is most important for authentication purpose
 app.get('/checkauth', function(req, res) {
   if (req.isAuthenticated()) {
     res.send({ response: 'user is authenticated' });

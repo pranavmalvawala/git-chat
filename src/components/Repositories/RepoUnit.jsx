@@ -6,6 +6,7 @@ function RepoUnit(props) {
   return (
     <div>
       {itemToBeHighlighted ? (
+        // when its the turn of highlighted repo a class is added
         <div
           className="repo-unit style"
           onClick={() => props.clickedItem(props.repoData)}
@@ -14,6 +15,7 @@ function RepoUnit(props) {
           <p className="repo-description">{props.repoData.description}</p>
         </div>
       ) : (
+        // when its the rest of the repos
         <div
           className="repo-unit"
           onClick={() => props.clickedItem(props.repoData)}
