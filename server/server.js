@@ -58,7 +58,7 @@ passport.deserializeUser(function(id, done) {
 
 // this variable for sending users github data to React end
 var githubPersonData;
-
+var accessTokenValue;
 // github passport strategy
 passport.use(
   new GitHubStrategy(
@@ -69,6 +69,8 @@ passport.use(
     },
     function(accessToken, refreshToken, profile, cb) {
       githubPersonData = profile;
+      accessTokenValue = accessToken;
+      console.log('access token', accessToken);
       User.findOrCreate({ githubId: profile.id }, function(err, user) {
         return cb(err, user);
       });
@@ -95,7 +97,6 @@ app.post('/signup', function(req, res) {
     } else {
       passport.authenticate('local')(req, res, function() {
         authResponse = 'Authenticated';
-
         res.send({ response: true });
       });
     }
@@ -112,6 +113,7 @@ app.get(
   passport.authenticate('github', { failureRedirect: '/authenticate' }),
   function(req, res) {
     githubResponse = 'Authenticated';
+    // console.log('-------------->', res);
     // Successful authentication, redirect chatpage.
     res.redirect('http://localhost:3000/chatpage');
   }
@@ -122,6 +124,7 @@ app.get('/logout', function(req, res) {
   authResponse = null;
   loginAuthenticate = null;
   githubResponse = null;
+  accessTokenValue = null;
 
   req.logout();
   res.send({ response: 'success' });
@@ -154,21 +157,29 @@ app.post('/login', function(req, res) {
 // data on this api is most important for authentication purpose
 app.get('/checkauth', function(req, res) {
   if (req.isAuthenticated()) {
+    console.log('auth');
     res.send({ response: 'user is authenticated' });
   } else {
-    if (loginAuthenticate === 'User Available') {
-      res.send({ response: 'user is authenticated' });
+    if (accessTokenValue) {
+      console.log('here', accessTokenValue);
+      res.send({ response: accessTokenValue, githubPersonData });
     } else {
-      if (authResponse === 'Authenticated') {
-        res.send({ response: 'user is authenticated' });
-      } else {
-        if (githubResponse === 'Authenticated') {
-          res.send({ response: 'user is authenticated', githubPersonData });
-        } else {
-          res.send({ response: 'user is not authenticated' });
-        }
-      }
+      console.log('deleted', accessTokenValue);
+      res.send({ response: 'user is not authenticated' });
     }
+    // if (loginAuthenticate === 'User Available') {
+    //   res.send({ response: 'user is authenticated' });
+    // } else {
+    //   if (authResponse === 'Authenticated') {
+    //     res.send({ response: 'user is authenticated' });
+    //   } else {
+    //     if (githubResponse === 'Authenticated') {
+    //       res.send({ response: 'user is authenticated', githubPersonData });
+    //     } else {
+    //       res.send({ response: 'user is not authenticated' });
+    //     }
+    //   }
+    // }
   }
 });
 
@@ -181,4 +192,7 @@ const io = socket(server);
 
 io.on('connection', function(socket) {
   console.log('Connection made', socket.id);
+  socket.on('chat', function(data) {
+    io.sockets.emit('chat', data);
+  });
 });

@@ -6,7 +6,7 @@ import Repositories from '../Repositories';
 import ChatContainer from './ChatContainer';
 import NavBar from './NavBar';
 // component on the right which contains chat functionality
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 function ChatPage(props) {
   const [authenticated, setAuthentication] = useState(false);
@@ -24,9 +24,10 @@ function ChatPage(props) {
         .get('http://localhost:5000/checkauth')
         .then(res => {
           setUserData(res.data.githubPersonData);
-          res.data.response === 'user is not authenticated'
+          !res.data.response
             ? props.history.push('/signin')
             : setAuthentication(true);
+          sessionStorage.setItem('token', res.data.response);
         })
         .catch(err => {
           props.history.push('/signin');
@@ -51,7 +52,7 @@ function ChatPage(props) {
   function passItemToChat(item) {
     setClickedItem(item);
     // connection is made just once on the clicked repo
-    const socket = io('http://localhost:5000');
+    // const socket = io('http://localhost:5000');
   }
 
   return (
@@ -68,7 +69,9 @@ function ChatPage(props) {
             )}
           </div>
           <div className="repo-right-div">
-            {userData && <ChatContainer selectedRepo={clickedItem} />}
+            {userData && (
+              <ChatContainer selectedRepo={clickedItem} userData={userData} />
+            )}
           </div>
         </div>
       </div>

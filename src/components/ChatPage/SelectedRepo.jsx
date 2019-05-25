@@ -49,7 +49,7 @@ function SelectedRepo(props) {
         </Modal.Footer>
       </Modal>
       {/* Main chat component */}
-      <ChatDoneHere />
+      <ChatDoneHere userData={props.userData} />
     </>
   );
 }

@@ -172,3 +172,24 @@
 .btn-style {
   max-width: 58px;
 }
+
+.chat-window {
+  height: 475px;
+  max-height: 475px;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.input-style {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.input-size {
+  width: 100px;
+}
+
+.btn-width {
+  width: 130px;
+}
