@@ -1,3 +1,10 @@
+use this while creating an auth app here on github
+Homepage URL:
+http://localhost:3000
+
+Authorization callback URL:
+http://localhost:5000/chatpage
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
