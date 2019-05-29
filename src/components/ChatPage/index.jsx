@@ -24,13 +24,13 @@ function ChatPage(props) {
         .get('http://localhost:5000/checkauth')
         .then(res => {
           setUserData(res.data.githubPersonData);
-          !res.data.response
-            ? props.history.push('/signin')
+          res.data.response !== 'Authenticated'
+            ? props.history.push('/')
             : setAuthentication(true);
           sessionStorage.setItem('token', res.data.response);
         })
         .catch(err => {
-          props.history.push('/signin');
+          props.history.push('/');
         });
     }
     // this [] at end makes the useEffect to call only if there are changes in

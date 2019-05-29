@@ -23,22 +23,12 @@ function Home(props) {
       </Jumbotron>
       <Container className="center div-color">
         <ButtonToolbar className="center distance">
-          <Button
-            size="lg"
-            variant="outline-info"
-            className="center margin"
-            onClick={handleSignUp}
-          >
-            Sign up
-          </Button>
-          <Button
-            size="lg"
-            variant="outline-info"
-            className="center margin"
-            onClick={handleSignIn}
-          >
-            Sign In
-          </Button>
+          <a href="http://localhost:5000/auth/github">
+            <Button variant="outline-dark" className="center margin">
+              <i className="fab fa-github" />
+              Sign in with Github
+            </Button>
+          </a>
         </ButtonToolbar>
       </Container>
     </div>
