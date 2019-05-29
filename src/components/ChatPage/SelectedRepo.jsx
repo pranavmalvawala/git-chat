@@ -23,7 +23,9 @@ function SelectedRepo(props) {
               <h3>{props.selectedRepo.name}</h3>
             </div>
             <div className="child-right-div">
-              <p className="contributor-head">:Contributors:</p>
+              <p className="contributor-head">
+                -- Contributors of this repo --
+              </p>
               {props.contributors.map(item => (
                 <span key={item.id}>{item.login},</span>
               ))}
@@ -49,7 +51,7 @@ function SelectedRepo(props) {
         </Modal.Footer>
       </Modal>
       {/* Main chat component */}
-      <ChatDoneHere userData={props.userData} />
+      <ChatDoneHere socket={props.socket} name={props.name} />
     </>
   );
 }

@@ -21,18 +21,16 @@ function NavBar(props) {
             variant="secondary"
             id="dropdown-basic"
           >
-            {props.userData && (
+            {props.name && (
               <Container>
                 <Row>
                   <Col xs={0.3} md={0.2}>
                     <Image
-                      src={props.userData.photos[0].value}
+                      src={props.photo}
                       roundedCircle
                       className="profileImg"
                     />
-                    <span className="profile-name">
-                      {props.userData.username}
-                    </span>
+                    <span className="profile-name">{props.name}</span>
                   </Col>
                 </Row>
               </Container>

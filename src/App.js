@@ -1,20 +1,21 @@
 import React from 'react';
+import io from 'socket.io-client';
 import './App.css';
 import './components/components.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import SignUp from './components/SignUp/index';
-import ChatPage from './components/ChatPage/index';
-import SignIn from './components/SignIn/index';
 import Home from './components/Home/index';
+const socket = io('http://localhost:5000');
+const provider = 'github';
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/signup" component={SignUp} />
-        <Route path="/chatpage" component={ChatPage} />
-        <Route path="/signin" component={SignIn} />
+        <Route
+          exact
+          path="/"
+          render={() => <Home socket={socket} provider={provider} />}
+        />
       </Switch>
     </Router>
   );
