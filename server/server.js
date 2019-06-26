@@ -76,12 +76,11 @@ app.set('io', io);
 // Direct other requests to the auth router
 app.use('/', authRouter);
 
-// Socket setup
-//const io2 = socketio(server);
+// // Socket setup
 
-io.on('connection', function(socket) {
-  console.log('Connection made', socket.id);
-  socket.on('chat', function(data) {
-    io.sockets.emit('chat', data);
-  });
-});
+// io.on('connection', function(socket) {
+//   console.log('Connection made', socket.id);
+//   socket.on('chat', function(data) {
+//     io.sockets.emit('chat', data);
+//   });
+// });

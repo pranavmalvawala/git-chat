@@ -10,6 +10,7 @@ import NavBar from './NavBar';
 
 function ChatPage(props) {
   const [clickedItem, setClickedItem] = useState({});
+  const [chatSocket, setChatSocket] = useState('');
 
   // redirects to home page after the response of server is OK on SIGN OUT rqst
   function handleSignOut(e) {
@@ -26,6 +27,8 @@ function ChatPage(props) {
     setClickedItem(item);
     // connection is made just once on the clicked repo
     // const socket = io('http://localhost:5000');
+    const socket = 1;
+    setChatSocket(socket);
   }
 
   return (
@@ -48,7 +51,7 @@ function ChatPage(props) {
           {props.repos && (
             <ChatContainer
               selectedRepo={clickedItem}
-              socket={props.socket}
+              socket={chatSocket}
               name={props.name}
             />
           )}

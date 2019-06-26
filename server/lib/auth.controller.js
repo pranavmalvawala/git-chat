@@ -10,3 +10,12 @@ exports.github = (req, res) => {
   io.in(req.session.socketId).emit('github', user);
   res.end();
 };
+
+exports.chat = (req, res) => {
+  const io = req.app.get('io');
+  console.log('here', io);
+  const chat = io.of('/my-chat');
+  chat.on('connection', function(socket) {
+    console.log('Socket connected');
+  });
+};

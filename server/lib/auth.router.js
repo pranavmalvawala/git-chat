@@ -25,4 +25,6 @@ router.use((req, res, next) => {
 
 router.get('/github', githubAuth);
 
+router.get('/my-chat', authController.chat);
+
 module.exports = router;
