@@ -91,6 +91,7 @@
   display: flex;
   width: 100%;
   margin-left: 20px;
+  margin-bottom: 0px;
 }
 
 .repo-left-div {
@@ -101,12 +102,13 @@
 
 .repo-right-div {
   width: 65%;
+  margin-bottom: 10px;
   margin-left: 15px;
   margin-top: 20px;
   height: 640px;
   position: -webkit-sticky;
   position: sticky;
-  top: 8px;
+  top: 5px;
 }
 
 .repo-padding {
@@ -192,4 +194,8 @@
 
 .btn-width {
   width: 130px;
+}
+
+.github-btn {
+  margin-left: 85px;
 }

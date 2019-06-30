@@ -37,7 +37,8 @@ function ChatContainer(props) {
               <SelectedRepo
                 selectedRepo={props.selectedRepo}
                 contributors={contributors}
-                userData={props.userData}
+                socket={props.socket}
+                name={props.name}
               />
             </div>
           )

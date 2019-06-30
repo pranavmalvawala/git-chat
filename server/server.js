@@ -1,41 +1,31 @@
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const session = require('express-session');
-const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
-const GitHubStrategy = require('passport-github').Strategy;
-const findOrCreate = require('mongoose-findorcreate');
-const socket = require('socket.io');
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const findOrCreate = require("mongoose-findorcreate");
+const socketio = require("socket.io");
+const authRouter = require("./lib/auth.router");
+const passportInit = require("./lib/passport.init");
 
 const app = express();
 
+// Setup to accept JSON objects
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
 
-app.use(
-  session({
-    secret: 'our little secret',
-    resave: false,
-    saveUninitialized: false
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-mongoose.connect('mongodb://localhost:27017/gitchatDB', {
+// Setup for mongoDB
+mongoose.connect("mongodb://localhost:27017/gitchatDB", {
   useNewUrlParser: true
 });
-mongoose.set('useCreateIndex', true);
+mongoose.set("useCreateIndex", true);
 
 // Model schema
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
+const userSchema = mongoose.Schema({
   githubId: String
 });
 
@@ -43,9 +33,10 @@ userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
 // User model based on above schema
-const User = new mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
-passport.use(User.createStrategy());
+app.use(passport.initialize());
+passportInit();
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -56,90 +47,40 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-// this variable for sending users github data to React end
-var githubPersonData;
-
-// github passport strategy
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'http://localhost:5000/chatpage'
-    },
-    function(accessToken, refreshToken, profile, cb) {
-      githubPersonData = profile;
-
-      User.findOrCreate({ githubId: profile.id }, function(err, user) {
-        return cb(err, user);
-      });
-    }
-  )
+// Accept requests from our client
+app.use(
+  cors({
+    origin: "http://localhost:3000"
+  })
 );
 
-// EVERY COMMUNICATION AND LOGIC BETWEEN REACT AND NODE IS DONE THROUGH
-// RES.SEND HERE AND ACCESSING THAT THROUGH API IN REACT
-// ANY BETTER METHODS APPRECIATED
-
-app.get('/auth/github', passport.authenticate('github'));
-
-// variable responsible for redirecting to chat after authenticating a GITHUB user
-var githubResponse;
-
-app.get(
-  '/chatpage',
-  passport.authenticate('github', { failureRedirect: '/authenticate' }),
-  function(req, res) {
-    githubResponse = 'Authenticated';
-    // Successful authentication, redirect chatpage.
-    res.redirect('http://localhost:3000/chatpage');
-  }
+// saveUninitialized: true allows us to attach the socket id to the session
+// before we have athenticated the user
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
+  })
 );
 
-// logout and delete the values of global variables
-app.get('/logout', function(req, res) {
-  githubResponse = null;
-
-  req.logout();
-  res.send({ response: 'success' });
+const server = app.listen(5000, () => {
+  console.log("Server started on port 5000");
 });
 
-// data on this api is most important for authentication purpose
-app.get('/checkauth', function(req, res) {
-  if (req.isAuthenticated()) {
-    res.send({ response: 'user is authenticated' });
-  } else {
-    if (githubResponse === 'Authenticated') {
-      res.send({ response: 'Authenticated', githubPersonData });
-    } else {
-      res.send({ response: 'user is not authenticated' });
-    }
-    // if (loginAuthenticate === 'User Available') {
-    //   res.send({ response: 'user is authenticated' });
-    // } else {
-    //   if (authResponse === 'Authenticated') {
-    //     res.send({ response: 'user is authenticated' });
-    //   } else {
-    //     if (githubResponse === 'Authenticated') {
-    //       res.send({ response: 'user is authenticated', githubPersonData });
-    //     } else {
-    //       res.send({ response: 'user is not authenticated' });
-    //     }
-    //   }
-    // }
-  }
-});
+// Connecting sockets to the server and adding them to the request
+// so that we can access them later in the controller
+const io = socketio(server);
+app.set("io", io);
 
-var server = app.listen(5000, function() {
-  console.log('server started on port 5000');
-});
+// Direct other requests to the auth router
+app.use("/", authRouter);
 
-// Socket setup
-const io = socket(server);
+// // Socket setup
 
-io.on('connection', function(socket) {
-  console.log('Connection made', socket.id);
-  socket.on('chat', function(data) {
-    io.sockets.emit('chat', data);
-  });
-});
+// io.on('connection', function(socket) {
+//   console.log('Connection made', socket.id);
+//   socket.on('chat', function(data) {
+//     io.sockets.emit('chat', data);
+//   });
+// });
